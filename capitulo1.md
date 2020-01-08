@@ -154,17 +154,24 @@ VTP: propietario de Cisco, anuncia cada VLAN configurada en un switch, con su ID
 
 VTP se puede deshabilitar, poniendolo en modo transparente con el comando global `vtp mode transparent` o apagandolo completamente con `vtp mode off`. Ambas opciones muestran los comandos de **vlan** en el **running-config**
 
+VTP viene configurado por defecto como modo 'Server'
+
+El modo **off** (configurable only in CatOS switches) funciona del mismo modo que el modo **transparent**, con la excepción que no reenvia los anuncios sobre la información de la VLANs.
+
 ---
 ### Configuración de VLAN Trunking
 
 Cuando configuramos un puerto como troncal, podemos definir los siguiente:
-* El tipo de trunking: IEEE 802.1Q, ISL, o que negocie cual utilizar.
-* El modo administrtivo: Siempre usar trunk, siempre No trunk, o negociar.
+* El tipo de trunking: puede ser IEEE 802.1Q, ISL, o que el switch negocie cual utilizar.
+* El modo administrativo: Siempre usar trunk, siempre No trunk, o modo negociar.
 
 Los switches CISCO que soportan ISP e 802.1Q pueden negociar cual protocolo utilizar, utilizando **DTP** (Dynamic Trunking Protocol). Si ambos switches soportan ambos protocolos, usan ISL. Si nó, el protocolo que ambos soporten.
+
 Los switches que soportan ambos protocolos se pueden configurar con el comando de interfaz `switchport trunk encapsulation {dot1q | isl | negotiate}`, para establecerlo manual o negociado por DTP.
 
-DTP tambien se utilizar para que lo switches negocien si establecen un enlace troncal o no, dependiendo del **Administrative Mode** que esten configurados. El **Operational Mode** indica lo que realmente esta ocurriendo en la interfaz. Para configurar el **Administrative Mode** se usa el subcomando de interfaz `switchport mode`.
+DTP tambien se utilizar para que lo switches negocien si establecen un enlace troncal o no, dependiendo del **Administrative Mode** que esten configurados. 
+
+El **Operational Mode** indica lo que realmente esta ocurriendo en la interfaz. Para configurar el **Administrative Mode** se usa el subcomando de interfaz `switchport mode`.
 
 | Opcion | Descripción|
 |--------|------------|
@@ -370,6 +377,5 @@ Se ve que el status esta en non-trunking, sin embargo las VLAN 10 y 11 si estan 
 |`show vlan [brief | id vlan-id | name vlan-name | summary]` |Lists information about the VLAN
 |`show vlan [vlan]` |Displays VLAN information
 |`show vtp status` |Lists VTP configuration and status information
-
 
 

@@ -156,7 +156,7 @@ Paso 2.     Los switches no-root, recibe los Hello en sus root ports
 
 #### Como reaccionan los switches a los cambios de STP
 
-STP utiliza tres *timers*, los cuales los dicta el Root Switch en sus Hello que genera.
+STP utiliza tres *timers*, los cuales los dicta el Root Switch en sus Hello que genera periodicamente.
 
 Timers de STP:
 
@@ -164,16 +164,30 @@ Timers de STP:
 |---------------|-------------------|------------------------------------------|
 | Hello         | 2 segundos        | periodo de tiempo entre los Hello que genera el Root Switch |
 | MaxAge        | 10 veces el Hello (20 segundos) | Cuando espera un switch de no recibir Hellos antes de intentar cambiar la topología STP |
-| Forward delay | 15 segundos       | Cuando una interfaz pasa de blocking a forwarding, pasa por dos etapas intermedias de listening y learning. Es el delay que ocurre entre pasar de blocking a listenint, y de learning a forwarding. |
-
+| Forward delay | 15 segundos       | Cuando una interfaz pasa de blocking a forwarding, pasa por dos etapas intermedias de listening y learning. Es el delay que ocurre entre pasar de blocking a listening, listening a learning y learning a forwarding. 
 
 Si un switch deja de recibir los Hellos, por mas de el tiempo definido por MaxAge, este reacciona intentando cambiar nuevamente la topología STP. 
 
+El switch solo reacciona si deja de recibir Hello BPDU por MaxAge segundos, pero si el switch se da "cuenta" que falla la interfaz, reacciona *inmediatamente*.
+
 #### Cambio de los estados de las interfaces con STP
 
-De Blocking --> Listening --> Learning --> Forwarding
+En STP los puertos tienen **roles** y **estados**
+Roles: Root Port, Designated Port
+Estados: Blocking, Listening, Learning, Forwarding
+Los puertos pueden pasar de Forwarding --> Blocking: **Inmediatamente**
+Estados: De Blocking --> Listening --> Learning --> Forwarding
+
+**Listening:** no reenvia tramas, borra todas las entradas MAC que no recibe en el periodo, estas pueden causar loops temporales.
+**Learning:** aun no renvia tramas, pero aprende MAC Address recibidas
+
+El tiempo que se mantiene en Listening y Learning es Forward Delay timer. (15 seg cada uno, total 30 seg.)
+
+El tiempo de transision requiere: 20 seg del MAxAge mas 30 seg de los Forward Delay Timer, dando un tal de 50 segundos para que vuelva a converger.
+
+## Rapid STP (IEEE 802.1w) ##
+
+En RSTP el blocking state se llama *discarding state*
 
 
----
 
-**Pendiente completar**
